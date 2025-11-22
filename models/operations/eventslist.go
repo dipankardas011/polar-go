@@ -351,8 +351,10 @@ type EventsListRequest struct {
 	Source *SourceFilter `queryParam:"style=form,explode=true,name=source"`
 	// Query to filter events.
 	Query *string `queryParam:"style=form,explode=true,name=query"`
-	// Filter events by parent event ID. When not specified, returns root events only.
+	// Filter events by parent event ID when hierarchical is set to true. When not specified or null, returns root events only.
 	ParentID *string `queryParam:"style=form,explode=true,name=parent_id"`
+	// When true, filters by parent_id (root events if not specified). When false, returns all events regardless of hierarchy.
+	Hierarchical *bool `default:"false" queryParam:"style=form,explode=true,name=hierarchical"`
 	// Page number, defaults to 1.
 	Page *int64 `default:"1" queryParam:"style=form,explode=true,name=page"`
 	// Size of a page, defaults to 10. Maximum is 100.
@@ -449,6 +451,13 @@ func (e *EventsListRequest) GetParentID() *string {
 		return nil
 	}
 	return e.ParentID
+}
+
+func (e *EventsListRequest) GetHierarchical() *bool {
+	if e == nil {
+		return nil
+	}
+	return e.Hierarchical
 }
 
 func (e *EventsListRequest) GetPage() *int64 {

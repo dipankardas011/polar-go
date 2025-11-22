@@ -39,6 +39,8 @@
 | `ScopeSubscriptionsWrite`          | subscriptions:write                |
 | `ScopeCustomersRead`               | customers:read                     |
 | `ScopeCustomersWrite`              | customers:write                    |
+| `ScopeMembersRead`                 | members:read                       |
+| `ScopeMembersWrite`                | members:write                      |
 | `ScopeWalletsRead`                 | wallets:read                       |
 | `ScopeWalletsWrite`                | wallets:write                      |
 | `ScopeCustomerMetersRead`          | customer_meters:read               |

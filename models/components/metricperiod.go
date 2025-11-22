@@ -2277,6 +2277,69 @@ func (u CanceledSubscriptionsOther) MarshalJSON() ([]byte, error) {
 	return nil, errors.New("could not marshal union type CanceledSubscriptionsOther: all fields are null")
 }
 
+type ChurnedSubscriptionsType string
+
+const (
+	ChurnedSubscriptionsTypeInteger ChurnedSubscriptionsType = "integer"
+	ChurnedSubscriptionsTypeNumber  ChurnedSubscriptionsType = "number"
+)
+
+type ChurnedSubscriptions struct {
+	Integer *int64   `queryParam:"inline,name=Churned_Subscriptions"`
+	Number  *float64 `queryParam:"inline,name=Churned_Subscriptions"`
+
+	Type ChurnedSubscriptionsType
+}
+
+func CreateChurnedSubscriptionsInteger(integer int64) ChurnedSubscriptions {
+	typ := ChurnedSubscriptionsTypeInteger
+
+	return ChurnedSubscriptions{
+		Integer: &integer,
+		Type:    typ,
+	}
+}
+
+func CreateChurnedSubscriptionsNumber(number float64) ChurnedSubscriptions {
+	typ := ChurnedSubscriptionsTypeNumber
+
+	return ChurnedSubscriptions{
+		Number: &number,
+		Type:   typ,
+	}
+}
+
+func (u *ChurnedSubscriptions) UnmarshalJSON(data []byte) error {
+
+	var integer int64 = int64(0)
+	if err := utils.UnmarshalJSON(data, &integer, "", true, nil); err == nil {
+		u.Integer = &integer
+		u.Type = ChurnedSubscriptionsTypeInteger
+		return nil
+	}
+
+	var number float64 = float64(0)
+	if err := utils.UnmarshalJSON(data, &number, "", true, nil); err == nil {
+		u.Number = &number
+		u.Type = ChurnedSubscriptionsTypeNumber
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for ChurnedSubscriptions", string(data))
+}
+
+func (u ChurnedSubscriptions) MarshalJSON() ([]byte, error) {
+	if u.Integer != nil {
+		return utils.MarshalJSON(u.Integer, "", true)
+	}
+
+	if u.Number != nil {
+		return utils.MarshalJSON(u.Number, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type ChurnedSubscriptions: all fields are null")
+}
+
 type ChurnRateType string
 
 const (
@@ -2568,6 +2631,7 @@ type MetricPeriod struct {
 	CanceledSubscriptionsTooExpensive    CanceledSubscriptionsTooExpensive    `json:"canceled_subscriptions_too_expensive"`
 	CanceledSubscriptionsUnused          CanceledSubscriptionsUnused          `json:"canceled_subscriptions_unused"`
 	CanceledSubscriptionsOther           CanceledSubscriptionsOther           `json:"canceled_subscriptions_other"`
+	ChurnedSubscriptions                 ChurnedSubscriptions                 `json:"churned_subscriptions"`
 	ChurnRate                            ChurnRate                            `json:"churn_rate"`
 	GrossMargin                          GrossMargin                          `json:"gross_margin"`
 	GrossMarginPercentage                GrossMarginPercentage                `json:"gross_margin_percentage"`
@@ -2579,7 +2643,7 @@ func (m MetricPeriod) MarshalJSON() ([]byte, error) {
 }
 
 func (m *MetricPeriod) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &m, "", false, []string{"timestamp", "orders", "revenue", "net_revenue", "cumulative_revenue", "net_cumulative_revenue", "costs", "cumulative_costs", "average_order_value", "net_average_order_value", "average_revenue_per_user", "cost_per_user", "active_user_by_event", "one_time_products", "one_time_products_revenue", "one_time_products_net_revenue", "new_subscriptions", "new_subscriptions_revenue", "new_subscriptions_net_revenue", "renewed_subscriptions", "renewed_subscriptions_revenue", "renewed_subscriptions_net_revenue", "active_subscriptions", "monthly_recurring_revenue", "committed_monthly_recurring_revenue", "checkouts", "succeeded_checkouts", "checkouts_conversion", "canceled_subscriptions", "canceled_subscriptions_customer_service", "canceled_subscriptions_low_quality", "canceled_subscriptions_missing_features", "canceled_subscriptions_switched_service", "canceled_subscriptions_too_complex", "canceled_subscriptions_too_expensive", "canceled_subscriptions_unused", "canceled_subscriptions_other", "churn_rate", "gross_margin", "gross_margin_percentage", "cashflow"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &m, "", false, []string{"timestamp", "orders", "revenue", "net_revenue", "cumulative_revenue", "net_cumulative_revenue", "costs", "cumulative_costs", "average_order_value", "net_average_order_value", "average_revenue_per_user", "cost_per_user", "active_user_by_event", "one_time_products", "one_time_products_revenue", "one_time_products_net_revenue", "new_subscriptions", "new_subscriptions_revenue", "new_subscriptions_net_revenue", "renewed_subscriptions", "renewed_subscriptions_revenue", "renewed_subscriptions_net_revenue", "active_subscriptions", "monthly_recurring_revenue", "committed_monthly_recurring_revenue", "checkouts", "succeeded_checkouts", "checkouts_conversion", "canceled_subscriptions", "canceled_subscriptions_customer_service", "canceled_subscriptions_low_quality", "canceled_subscriptions_missing_features", "canceled_subscriptions_switched_service", "canceled_subscriptions_too_complex", "canceled_subscriptions_too_expensive", "canceled_subscriptions_unused", "canceled_subscriptions_other", "churned_subscriptions", "churn_rate", "gross_margin", "gross_margin_percentage", "cashflow"}); err != nil {
 		return err
 	}
 	return nil
@@ -2842,6 +2906,13 @@ func (m *MetricPeriod) GetCanceledSubscriptionsOther() CanceledSubscriptionsOthe
 		return CanceledSubscriptionsOther{}
 	}
 	return m.CanceledSubscriptionsOther
+}
+
+func (m *MetricPeriod) GetChurnedSubscriptions() ChurnedSubscriptions {
+	if m == nil {
+		return ChurnedSubscriptions{}
+	}
+	return m.ChurnedSubscriptions
 }
 
 func (m *MetricPeriod) GetChurnRate() ChurnRate {

@@ -76,6 +76,8 @@ type Metrics struct {
 	// Information about a metric.
 	CanceledSubscriptionsOther Metric `json:"canceled_subscriptions_other"`
 	// Information about a metric.
+	ChurnedSubscriptions Metric `json:"churned_subscriptions"`
+	// Information about a metric.
 	ChurnRate Metric `json:"churn_rate"`
 	// Information about a metric.
 	GrossMargin Metric `json:"gross_margin"`
@@ -335,6 +337,13 @@ func (m *Metrics) GetCanceledSubscriptionsOther() Metric {
 		return Metric{}
 	}
 	return m.CanceledSubscriptionsOther
+}
+
+func (m *Metrics) GetChurnedSubscriptions() Metric {
+	if m == nil {
+		return Metric{}
+	}
+	return m.ChurnedSubscriptions
 }
 
 func (m *Metrics) GetChurnRate() Metric {
